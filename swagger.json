@@ -1,0 +1,1303 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+      "title": "Evaluacion 3 PBRR",
+      "description": "Este es un servidor de la realizacion de la evaluacion 3. Puede obtener más información sobre Swagger en [http://swagger.io](http://swagger.io) o en [irc.freenode.net, #swagger](http://swagger.io/irc/). <br><br>Para este ejemplo, puede utilizar las siguientes claves de API para métodos:<ul><li>Método GET - Authorization Bearer: `get`</li><li>Método POST - Authorization Bearer: `post`</li><li>Método PATCH - Authorization Bearer: `patch`</li><li>Método PUT - Authorization Bearer: `put`</li><li>Método DELETE - Authorization Bearer: `delete`</li></ul>.",
+      "version": "1.0.0"
+  },
+  "servers": [
+      {
+          "url": "http://localhost/BackU3/V1",
+          "description": "Ambiente Dev"
+      }
+  ],
+  "tags": [
+      {
+          "name": "Parcelas",
+          "description": "Base de datos con las parcelas"
+      },
+      {
+          "name": "info_contacto",
+          "description": "base de datos con la informacion de contacto"
+          
+      },
+      {
+          "name": "historia",
+          "description": "historia"
+          
+      },
+      {
+          "name": "categoria_servicio",
+          "description": "categorias del servicio"
+          
+      },
+      {
+          "name": "pregunta_frecuente",
+          "description": "base de datos con las preguntas frecuentes"
+          
+      }
+  ],
+  "paths": {
+      "/parcela/": {
+          "get": {
+              "tags": [
+                  "Parcelas"
+              ],
+              "summary": "Retorna todos las Parcelas.",
+              "description": "Retorna una lista de Parcelas, incluye muchos datos",
+              "responses": {
+                  "200": {
+                      "description": "Respuesta exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ParcelaResponse"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthGet": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "Parcelas"
+              ],
+              "summary": "Crear nuevo elemento parcela",
+              "description": "Crea una parcela",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/ParcelaCreate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "201": {
+                      "description": "Creación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPost": []
+                  }
+              ]
+          },
+          "patch": {
+              "tags": [
+                  "Parcelas"
+              ],
+              "summary": "Apagar o Encender una parcela",
+              "description": "Apaga o Enciende una parcela, deja activo en false o true respectivamente.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  {
+                      "name": "accion",
+                      "in": "query",
+                      "description": "La acción es requerida para la ejecución.",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "apagar",
+                              "encender"
+                          ],
+                          "default": "apagar"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Cambio exitoso",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPatch": []
+                  }
+              ]
+          },
+          "put": {
+              "tags": [
+                  "Parcelas"
+              ],
+              "summary": "Modifica los datos de una parcela",
+              "description": "Puede modificar los atributos de parcela. Pueden ser juntos o separados.",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/ParcelaUpdate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Actualización exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "409": {
+                      "description": "Error: Conflicto",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPut": []
+                  }
+              ]
+          },
+          "delete": {
+              "tags": [
+                  "Parcelas"
+              ],
+              "summary": "Eliminar una parcela",
+              "description": "Elimina una parcela, borra de la base de datos.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": false,
+                      "type": "integer",
+                      "format": "int64"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Eliminación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "404": {
+                      "description": "Error: No encontrado",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "405": {
+                      "description": "Error: No implementado"
+                  },
+                  "406": {
+                      "description": "Error: No aceptable",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthDelete": []
+                  }
+              ]
+          }
+      },
+      "/info_contacto/": {
+          "get": {
+              "tags": [
+                  "info_contacto"
+              ],
+              "summary": "Retorna todos los objetos",
+              "description": "Retorna una lista de objetos del tipo básico, incluye: id, nombre y activo",
+              "responses": {
+                  "200": {
+                      "description": "Respuesta exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/info_contactoResponse"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthGet": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "info_contacto"
+              ],
+              "summary": "Crear nuevo objeto",
+              "description": "Crea un objeto básico, incluye: id, nombre y activo",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoCreate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "201": {
+                      "description": "Creación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "409": {
+                      "description": "Error: Conflicto",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPost": []
+                  }
+              ]
+          },
+          "patch": {
+              "tags": [
+                  "info_contacto"
+              ],
+              "summary": "Apagar o Encender un objeto",
+              "description": "Apaga o Enciende un objeto básico, deja activo en false o true respectivamente.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  {
+                      "name": "accion",
+                      "in": "query",
+                      "description": "La acción es requerida para la ejecución.",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "apagar",
+                              "encender"
+                          ],
+                          "default": "apagar"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Cambio exitoso",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPatch": []
+                  }
+              ]
+          },
+          "put": {
+              "tags": [
+                  "info_contacto"
+              ],
+              "summary": "Modifica los datos de un objeto",
+              "description": "Se puede sólo modificar el campo `nombre`",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoUpdate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Actualización exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPut": []
+                  }
+              ]
+          },
+          "delete": {
+              "tags": [
+                  "info_contacto"
+              ],
+              "summary": "Eliminar un objeto",
+              "description": "Elimina un objeto básico, lo borra de la base de datos.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Eliminación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "404": {
+                      "description": "Error: No encontrado",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "405": {
+                      "description": "Error: No implementado"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthDelete": []
+                  }
+              ]
+          }
+      },
+      "/pregunta_frecuente/": {
+          "get": {
+              "tags": [
+                  "pregunta_frecuente"
+              ],
+              "summary": "Retorna todos los objetos",
+              "description": "Retorna una lista de objetos del tipo básico, incluye: id, nombre y activo",
+              "responses": {
+                  "200": {
+                      "description": "Respuesta exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/info_contactoResponse"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthGet": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "pregunta_frecuente"
+              ],
+              "summary": "Crear nuevo objeto",
+              "description": "Crea un objeto básico, incluye: id, nombre y activo",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoCreate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "201": {
+                      "description": "Creación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "409": {
+                      "description": "Error: Conflicto",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPost": []
+                  }
+              ]
+          },
+          "patch": {
+              "tags": [
+                  "pregunta_frecuente"
+              ],
+              "summary": "Apagar o Encender un objeto",
+              "description": "Apaga o Enciende un objeto básico, deja activo en false o true respectivamente.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  {
+                      "name": "accion",
+                      "in": "query",
+                      "description": "La acción es requerida para la ejecución.",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "apagar",
+                              "encender"
+                          ],
+                          "default": "apagar"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Cambio exitoso",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPatch": []
+                  }
+              ]
+          },
+          "put": {
+              "tags": [
+                  "pregunta_frecuente"
+              ],
+              "summary": "Modifica los datos de un objeto",
+              "description": "Se puede sólo modificar el campo `nombre`",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoUpdate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Actualización exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPut": []
+                  }
+              ]
+          },
+          "delete": {
+              "tags": [
+                  "pregunta_frecuente"
+              ],
+              "summary": "Eliminar un objeto",
+              "description": "Elimina un objeto básico, lo borra de la base de datos.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Eliminación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "404": {
+                      "description": "Error: No encontrado",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "405": {
+                      "description": "Error: No implementado"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthDelete": []
+                  }
+              ]
+          }
+      },
+      "/historia/": {
+          "get": {
+              "tags": [
+                  "historia"
+              ],
+              "summary": "Retorna todos los objetos",
+              "description": "Retorna una lista de objetos del tipo básico, incluye: id, nombre y activo",
+              "responses": {
+                  "200": {
+                      "description": "Respuesta exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/info_contactoResponse"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthGet": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "historia"
+              ],
+              "summary": "Crear nuevo objeto",
+              "description": "Crea un objeto básico, incluye: id, nombre y activo",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoCreate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "201": {
+                      "description": "Creación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "409": {
+                      "description": "Error: Conflicto",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPost": []
+                  }
+              ]
+          },
+          "patch": {
+              "tags": [
+                  "historia"
+              ],
+              "summary": "Apagar o Encender un objeto",
+              "description": "Apaga o Enciende un objeto básico, deja activo en false o true respectivamente.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  {
+                      "name": "accion",
+                      "in": "query",
+                      "description": "La acción es requerida para la ejecución.",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "apagar",
+                              "encender"
+                          ],
+                          "default": "apagar"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Cambio exitoso",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPatch": []
+                  }
+              ]
+          },
+          "put": {
+              "tags": [
+                  "historia"
+              ],
+              "summary": "Modifica los datos de un objeto",
+              "description": "Se puede sólo modificar el campo `nombre`",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoUpdate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Actualización exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPut": []
+                  }
+              ]
+          },
+          "delete": {
+              "tags": [
+                  "historia"
+              ],
+              "summary": "Eliminar un objeto",
+              "description": "Elimina un objeto básico, lo borra de la base de datos.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Eliminación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "404": {
+                      "description": "Error: No encontrado",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "405": {
+                      "description": "Error: No implementado"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthDelete": []
+                  }
+              ]
+          }
+      },
+      "/categoria_servicio/": {
+          "get": {
+              "tags": [
+                  "categoria_servicio"
+              ],
+              "summary": "Retorna todos los objetos",
+              "description": "Retorna una lista de objetos del tipo básico, incluye: id, nombre y activo",
+              "responses": {
+                  "200": {
+                      "description": "Respuesta exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/info_contactoResponse"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthGet": []
+                  }
+              ]
+          },
+          "post": {
+              "tags": [
+                  "categoria_servicio"
+              ],
+              "summary": "Crear nuevo objeto",
+              "description": "Crea un objeto básico, incluye: id, nombre y activo",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoCreate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "201": {
+                      "description": "Creación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "409": {
+                      "description": "Error: Conflicto",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPost": []
+                  }
+              ]
+          },
+          "patch": {
+              "tags": [
+                  "categoria_servicio"
+              ],
+              "summary": "Apagar o Encender un objeto",
+              "description": "Apaga o Enciende un objeto básico, deja activo en false o true respectivamente.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  {
+                      "name": "accion",
+                      "in": "query",
+                      "description": "La acción es requerida para la ejecución.",
+                      "required": true,
+                      "schema": {
+                          "type": "string",
+                          "enum": [
+                              "apagar",
+                              "encender"
+                          ],
+                          "default": "apagar"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Cambio exitoso",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPatch": []
+                  }
+              ]
+          },
+          "put": {
+              "tags": [
+                  "categoria_servicio"
+              ],
+              "summary": "Modifica los datos de un objeto",
+              "description": "Se puede sólo modificar el campo `nombre`",
+              "requestBody": {
+                  "required": true,
+                  "content": {
+                      "application/json": {
+                          "schema": {
+                              "$ref": "#/components/schemas/info_contactoUpdate"
+                          }
+                      }
+                  }
+              },
+              "responses": {
+                  "200": {
+                      "description": "Actualización exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthPut": []
+                  }
+              ]
+          },
+          "delete": {
+              "tags": [
+                  "categoria_servicio"
+              ],
+              "summary": "Eliminar un objeto",
+              "description": "Elimina un objeto básico, lo borra de la base de datos.",
+              "parameters": [
+                  {
+                      "name": "id",
+                      "in": "query",
+                      "description": "ID del objeto",
+                      "required": true,
+                      "type": "integer",
+                      "format": "int64"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Eliminación exitosa",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ResultadoOk"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Error: Sin Autorización"
+                  },
+                  "404": {
+                      "description": "Error: No encontrado",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "$ref": "#/components/schemas/ConflictoExiste"
+                              }
+                          }
+                      }
+                  },
+                  "405": {
+                      "description": "Error: No implementado"
+                  }
+              },
+              "security": [
+                  {
+                      "bearerAuthDelete": []
+                  }
+              ]
+          }
+      }
+  },
+  "components": {
+      "securitySchemes": {
+          "bearerAuthGet": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+          },
+          "bearerAuthPost": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+          },
+          "bearerAuthPatch": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+          },
+          "bearerAuthPut": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+          },
+          "bearerAuthDelete": {
+              "type": "http",
+              "scheme": "bearer",
+              "bearerFormat": "JWT"
+          }
+      },
+      "schemas": {
+          "ResultadoOk": {
+              "type": "object",
+              "properties": {
+                  "data": {
+                      "type": "boolean",
+                      "example": true
+                  }
+              }
+          },
+          "ConflictoExiste": {
+              "type": "object",
+              "properties": {
+                  "data": {
+                      "type": "boolean",
+                      "example": false
+                  }
+              }
+          },
+          "info_contactoItem": {
+              "type": "object",
+              "properties": {
+                  "id": {
+                      "type": "string",
+                      "example": "0"
+                  },
+                  "nombre": {
+                      "type": "string",
+                      "example": "nuevo objeto"
+                  },
+                  "activo": {
+                      "type": "boolean",
+                      "example": true
+                  }
+              }
+          },
+          "info_contactoUpdate": {
+              "type": "object",
+                      "properties": {
+                          "id": {
+                              "type": "integer",
+                              "example": 13
+                          },
+                          "nombre": {
+                              "type": "string",
+                              "example": "Desarrollo Backend"
+                          }
+                      },
+                      "required": [
+                          "id",
+                          "nombre"
+                ]
+                  
+              
+          },
+          "info_contactoResponse": {
+              "type": "object",
+              "properties": {
+                  "data": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/info_contactoItem"
+                      }
+                  }
+              }
+          },
+          "info_contactoCreate": {
+              "type": "object",
+              "properties": {
+                  "nombre": {
+                      "type": "string",
+                      "example": "nuevo objeto"
+                  }
+              },
+              "required": [
+                  "nombre"
+              ]
+          },
+          "ParcelaResponse": {
+              "type": "object",
+              "properties": {
+                  "data": {
+                      "type": "array",
+                      "items": {
+                          "$ref": "#/components/schemas/ParcelaItem"
+                      }
+                  }
+              }
+          },
+          "ParcelaItem": {
+              "type": "object",
+              "properties": {
+                  "id": {
+                      "type": "int",
+                      "example": 0
+                  },
+                  "parcela": {
+                      "type": "string",
+                      "example": "¿parcela?"
+                  },
+                  "nombre": {
+                      "type": "string",
+                      "example": "RE: parcela"
+                  },
+                  "activo": {
+                      "type": "boolean",
+                      "example": true
+                  }
+              }
+          },
+          "ParcelaCreate": {
+              "type": "object",
+              "properties": {
+                  "pregunta": {
+                      "type": "string",
+                      "example": "¿parcela?"
+                  },
+                  "respuesta": {
+                      "type": "string",
+                      "example": "RE: Si, parcela"
+                  }
+              },
+              "required": [
+                  "nombre"
+              ]
+          },
+          "ParcelaUpdate": {
+              "type": "object",
+              "properties": {
+                  "id": {
+                      "type": "int",
+                      "example": 4
+                  },
+                  "pregunta": {
+                      "type": "string",
+                      "example": "¿parcela?"
+                  },
+                  "respuesta": {
+                      "type": "string",
+                      "example": "RE: Si, parcela"
+                  }
+              },
+              "required": [
+                  "id"
+              ]
+          }
+      }
+  },
+  "security": [
+      {
+          "bearerAuthGet": []
+      }
+  ]
+}

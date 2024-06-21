@@ -17,22 +17,23 @@ if (strlen($_parametros) > 0){
 
 }
 
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PATCH, DELETE');
-header('Content-Type: Application/json; charset=UTF-8');
+header("Acces-Control-Allow-Origin: *");
+header("Acces-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE");
+header("Content-Type: application/json; charset=UTF-8");
 
-$header = null;
+
+$_header = null;
 try {
-    $header = isset(getallheaders()['Authorization']) ? getallheaders()['Authorization'] :null;
-    if ($header == null){
-        throw new Exception('no tiene autorizacion lmao');
+    $_header = isset(getallheaders()['Authorization']) ? getallheaders()['Authorization'] : null;
+    if ($_header === null) {
+        throw new Exception("No tiene autorizacion");
     }
 } catch (Exception $e) {
     http_response_code(401);
     echo json_encode(['Error' => $e->getMessage()]);
 }
 
-$_token_get = 'Bearer ciisa';
+$_token_get = 'Bearer get';
 $_token_post = 'Bearer post';
 $_token_put = 'Bearer put';
 $_token_patch = 'Bearer patch';

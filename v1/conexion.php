@@ -10,7 +10,7 @@ class Conexion{
     public function __construct(){
         $this ->server = $_SERVER['HTTP_HOST'];
         $this ->connection = null;
-        $this -> db = 'ciisa_backend_v1_eva2_B';
+        $this ->db = 'ciisa_backend_v1_eva2_B';
         $this ->port = 3306;
         $this ->host = 'localhost';
         
@@ -24,6 +24,18 @@ class Conexion{
         $this -> connection = mysqli_connect($this->host, $this->username, $this->password, $this->db, $this->port);
 
 }
+public function getConnection()
+{
+    $this->connection = mysqli_connect($this->host, $this->username, $this->password, $this->db, $this->port);
+    mysqli_set_charset($this->connection, "utf8");
+    if (!$this->connection) {
+        return mysqli_connect_errno();
+    }
+    return $this->connection;
+}
 
-
+public function closeConnection()
+{
+    mysqli_close($this->connection);
+}
 }
